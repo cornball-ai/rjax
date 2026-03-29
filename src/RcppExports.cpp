@@ -304,6 +304,164 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rjax_pow
+SEXP rjax_pow(SEXP lhs_xptr, SEXP rhs_xptr);
+RcppExport SEXP _rjax_rjax_pow(SEXP lhs_xptrSEXP, SEXP rhs_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type lhs_xptr(lhs_xptrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type rhs_xptr(rhs_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_pow(lhs_xptr, rhs_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_sin
+SEXP rjax_sin(SEXP op_xptr);
+RcppExport SEXP _rjax_rjax_sin(SEXP op_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type op_xptr(op_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_sin(op_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_cos
+SEXP rjax_cos(SEXP op_xptr);
+RcppExport SEXP _rjax_rjax_cos(SEXP op_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type op_xptr(op_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_cos(op_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_sign
+SEXP rjax_sign(SEXP op_xptr);
+RcppExport SEXP _rjax_rjax_sign(SEXP op_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type op_xptr(op_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_sign(op_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_max
+SEXP rjax_max(SEXP lhs_xptr, SEXP rhs_xptr);
+RcppExport SEXP _rjax_rjax_max(SEXP lhs_xptrSEXP, SEXP rhs_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type lhs_xptr(lhs_xptrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type rhs_xptr(rhs_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_max(lhs_xptr, rhs_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_min
+SEXP rjax_min(SEXP lhs_xptr, SEXP rhs_xptr);
+RcppExport SEXP _rjax_rjax_min(SEXP lhs_xptrSEXP, SEXP rhs_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type lhs_xptr(lhs_xptrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type rhs_xptr(rhs_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_min(lhs_xptr, rhs_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_clamp
+SEXP rjax_clamp(SEXP min_xptr, SEXP op_xptr, SEXP max_xptr);
+RcppExport SEXP _rjax_rjax_clamp(SEXP min_xptrSEXP, SEXP op_xptrSEXP, SEXP max_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type min_xptr(min_xptrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type op_xptr(op_xptrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type max_xptr(max_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_clamp(min_xptr, op_xptr, max_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_select
+SEXP rjax_select(SEXP pred_xptr, SEXP on_true_xptr, SEXP on_false_xptr);
+RcppExport SEXP _rjax_rjax_select(SEXP pred_xptrSEXP, SEXP on_true_xptrSEXP, SEXP on_false_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pred_xptr(pred_xptrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type on_true_xptr(on_true_xptrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type on_false_xptr(on_false_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_select(pred_xptr, on_true_xptr, on_false_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_op_shape
+SEXP rjax_op_shape(SEXP builder_xptr, SEXP op_xptr);
+RcppExport SEXP _rjax_rjax_op_shape(SEXP builder_xptrSEXP, SEXP op_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type builder_xptr(builder_xptrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type op_xptr(op_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_op_shape(builder_xptr, op_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_broadcast_in_dim
+SEXP rjax_broadcast_in_dim(SEXP op_xptr, SEXP out_dims_sexp, SEXP broadcast_dims_sexp);
+RcppExport SEXP _rjax_rjax_broadcast_in_dim(SEXP op_xptrSEXP, SEXP out_dims_sexpSEXP, SEXP broadcast_dims_sexpSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type op_xptr(op_xptrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type out_dims_sexp(out_dims_sexpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type broadcast_dims_sexp(broadcast_dims_sexpSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_broadcast_in_dim(op_xptr, out_dims_sexp, broadcast_dims_sexp));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_reduce_sum
+SEXP rjax_reduce_sum(SEXP op_xptr, SEXP dims_sexp, SEXP builder_xptr);
+RcppExport SEXP _rjax_rjax_reduce_sum(SEXP op_xptrSEXP, SEXP dims_sexpSEXP, SEXP builder_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type op_xptr(op_xptrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type dims_sexp(dims_sexpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type builder_xptr(builder_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_reduce_sum(op_xptr, dims_sexp, builder_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_constant_broadcast
+SEXP rjax_constant_broadcast(SEXP builder_xptr, double value, std::string dtype, SEXP dims_sexp);
+RcppExport SEXP _rjax_rjax_constant_broadcast(SEXP builder_xptrSEXP, SEXP valueSEXP, SEXP dtypeSEXP, SEXP dims_sexpSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type builder_xptr(builder_xptrSEXP);
+    Rcpp::traits::input_parameter< double >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type dims_sexp(dims_sexpSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_constant_broadcast(builder_xptr, value, dtype, dims_sexp));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rjax_op_builder
+SEXP rjax_op_builder(SEXP op_xptr);
+RcppExport SEXP _rjax_rjax_op_builder(SEXP op_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type op_xptr(op_xptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_op_builder(op_xptr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rjax_build
 SEXP rjax_build(SEXP builder_xptr);
 RcppExport SEXP _rjax_rjax_build(SEXP builder_xptrSEXP) {
@@ -354,6 +512,19 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rjax_rjax_dot", (DL_FUNC) &_rjax_rjax_dot, 2},
     {"_rjax_rjax_transpose", (DL_FUNC) &_rjax_rjax_transpose, 2},
     {"_rjax_rjax_reshape", (DL_FUNC) &_rjax_rjax_reshape, 2},
+    {"_rjax_rjax_pow", (DL_FUNC) &_rjax_rjax_pow, 2},
+    {"_rjax_rjax_sin", (DL_FUNC) &_rjax_rjax_sin, 1},
+    {"_rjax_rjax_cos", (DL_FUNC) &_rjax_rjax_cos, 1},
+    {"_rjax_rjax_sign", (DL_FUNC) &_rjax_rjax_sign, 1},
+    {"_rjax_rjax_max", (DL_FUNC) &_rjax_rjax_max, 2},
+    {"_rjax_rjax_min", (DL_FUNC) &_rjax_rjax_min, 2},
+    {"_rjax_rjax_clamp", (DL_FUNC) &_rjax_rjax_clamp, 3},
+    {"_rjax_rjax_select", (DL_FUNC) &_rjax_rjax_select, 3},
+    {"_rjax_rjax_op_shape", (DL_FUNC) &_rjax_rjax_op_shape, 2},
+    {"_rjax_rjax_broadcast_in_dim", (DL_FUNC) &_rjax_rjax_broadcast_in_dim, 3},
+    {"_rjax_rjax_reduce_sum", (DL_FUNC) &_rjax_rjax_reduce_sum, 3},
+    {"_rjax_rjax_constant_broadcast", (DL_FUNC) &_rjax_rjax_constant_broadcast, 4},
+    {"_rjax_rjax_op_builder", (DL_FUNC) &_rjax_rjax_op_builder, 1},
     {"_rjax_rjax_build", (DL_FUNC) &_rjax_rjax_build, 1},
     {"_rjax_rjax_build_with_root", (DL_FUNC) &_rjax_rjax_build_with_root, 2},
     {NULL, NULL, 0}

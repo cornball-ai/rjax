@@ -101,6 +101,58 @@ rjax_reshape <- function(op_xptr, new_dims) {
     .Call(`_rjax_rjax_reshape`, op_xptr, new_dims)
 }
 
+rjax_pow <- function(lhs_xptr, rhs_xptr) {
+    .Call(`_rjax_rjax_pow`, lhs_xptr, rhs_xptr)
+}
+
+rjax_sin <- function(op_xptr) {
+    .Call(`_rjax_rjax_sin`, op_xptr)
+}
+
+rjax_cos <- function(op_xptr) {
+    .Call(`_rjax_rjax_cos`, op_xptr)
+}
+
+rjax_sign <- function(op_xptr) {
+    .Call(`_rjax_rjax_sign`, op_xptr)
+}
+
+rjax_max <- function(lhs_xptr, rhs_xptr) {
+    .Call(`_rjax_rjax_max`, lhs_xptr, rhs_xptr)
+}
+
+rjax_min <- function(lhs_xptr, rhs_xptr) {
+    .Call(`_rjax_rjax_min`, lhs_xptr, rhs_xptr)
+}
+
+rjax_clamp <- function(min_xptr, op_xptr, max_xptr) {
+    .Call(`_rjax_rjax_clamp`, min_xptr, op_xptr, max_xptr)
+}
+
+rjax_select <- function(pred_xptr, on_true_xptr, on_false_xptr) {
+    .Call(`_rjax_rjax_select`, pred_xptr, on_true_xptr, on_false_xptr)
+}
+
+rjax_op_shape <- function(builder_xptr, op_xptr) {
+    .Call(`_rjax_rjax_op_shape`, builder_xptr, op_xptr)
+}
+
+rjax_broadcast_in_dim <- function(op_xptr, out_dims_sexp, broadcast_dims_sexp) {
+    .Call(`_rjax_rjax_broadcast_in_dim`, op_xptr, out_dims_sexp, broadcast_dims_sexp)
+}
+
+rjax_reduce_sum <- function(op_xptr, dims_sexp, builder_xptr) {
+    .Call(`_rjax_rjax_reduce_sum`, op_xptr, dims_sexp, builder_xptr)
+}
+
+rjax_constant_broadcast <- function(builder_xptr, value, dtype, dims_sexp) {
+    .Call(`_rjax_rjax_constant_broadcast`, builder_xptr, value, dtype, dims_sexp)
+}
+
+rjax_op_builder <- function(op_xptr) {
+    .Call(`_rjax_rjax_op_builder`, op_xptr)
+}
+
 rjax_build <- function(builder_xptr) {
     .Call(`_rjax_rjax_build`, builder_xptr)
 }
