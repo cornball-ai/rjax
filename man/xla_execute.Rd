@@ -8,7 +8,7 @@ xla_execute(executable, inputs = list())
 \arguments{
 \item{executable}{An \code{xla_executable} object.}
 
-\item{inputs}{A list of \code{xla_buffer} objects to feed as inputs.}
+\item{inputs}{A list of \code{xla_buffer} objects.}
 }
 \value{
 A list of \code{xla_buffer} objects (one per output).

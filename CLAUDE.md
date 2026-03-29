@@ -1,38 +1,55 @@
 # rjax
 
-R interface to XLA via the PJRT C API. No Python dependency.
+R interface to XLA. No Python dependency.
 
 ## Architecture
 
-Two planned layers:
+```
+R layer (xla_client, xla_buffer, xla_builder, xla_compile, xla_execute)
+  -> Rcpp C++ layer (src/*.cpp)
+    -> libxla_extension.so (elixir-nx prebuilt, downloaded by configure)
+```
 
-1. **PJRT runtime (pure C)** - Plugin loading, client/buffer/executable lifecycle, execution.
-   Uses `dlopen` + PJRT C API function pointer table. All R-to-C via `.Call()`.
-
-2. **HLO builder (C++, future)** - Programmatic HLO construction via XlaBuilder.
-   Will need C++ and linking against XLA headers/libs. Not yet implemented.
+Uses the XLA C++ API directly: PjRtClient, PjRtBuffer, XlaBuilder.
 
 ## Build/test
 
 ```bash
-r -e 'tinyrox::document(); tinypkgr::install(); tinytest::test_package("rjax")'
-r -e 'tinypkgr::check()'
+r -e 'Rscript -e "Rcpp::compileAttributes()"; tinyrox::document(); tinypkgr::install()'
+r -e 'tinytest::test_package("rjax")'
 ```
+
+After changing C++ code, regenerate Rcpp exports before building:
+```bash
+Rscript -e 'Rcpp::compileAttributes()'
+```
+
+## R/C++ header conflict
+
+R defines macros (`Memcpy`, `Free`, `length`, etc.) that collide with XLA headers.
+`rjax_types.h` handles this: includes Rcpp first, `#undef`s the offenders, then
+includes XLA headers. All `.cpp` files must include `rjax_types.h` instead of
+including Rcpp and XLA separately.
 
 ## Key types
 
-All XLA objects are R external pointers with S3 classes:
+All XLA objects are Rcpp::XPtr wrapping shared_ptr:
 
-- `xla_client` - wraps `PJRT_Client*`
-- `xla_buffer` - wraps `PJRT_Buffer*`
-- `xla_executable` - wraps `PJRT_LoadedExecutable*`
+- `xla_client` - wraps `shared_ptr<PjRtClient>`
+- `xla_buffer` - wraps `shared_ptr<PjRtBuffer>`
+- `xla_executable` - wraps `shared_ptr<PjRtLoadedExecutable>`
+- `xla_builder` - wraps `shared_ptr<XlaBuilder>`
+- `xla_op` - wraps `shared_ptr<XlaOp>`
+- `xla_computation` - wraps `shared_ptr<XlaComputation>`
 
-## PJRT plugin
+## XLA extension
 
-The package loads a PJRT plugin (`.so`) at runtime. Set `PJRT_PLUGIN_PATH` env var
-to point at the plugin, or place it in `inst/lib/`. The `configure` script can
-download prebuilt plugins from elixir-nx/xla releases.
+configure downloads `libxla_extension.so` + headers from elixir-nx/xla releases.
+Stored in `inst/xla/` (gitignored, not shipped in package tarball).
+Set `XLA_EXTENSION_DIR` env var to use a different location.
 
 ## Dependencies
 
-None in Imports. Pure base R + C.
+Imports: Rcpp
+LinkingTo: Rcpp
+Runtime: libxla_extension.so (linked at compile time, rpath'd)

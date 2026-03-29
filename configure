@@ -1,27 +1,79 @@
 #!/bin/sh
 # configure script for rjax
-# Detects or downloads PJRT plugin, generates src/Makevars
+# Downloads the elixir-nx XLA extension and generates src/Makevars
 
-PJRT_PLUGIN_PATH="${PJRT_PLUGIN_PATH}"
-PJRT_INCLUDE_DIR="${PJRT_INCLUDE_DIR}"
+XLA_VERSION="0.10.0"
+XLA_BASE_URL="https://github.com/elixir-nx/xla/releases/download/v${XLA_VERSION}"
 
-# Default: just need dlopen (no compile-time XLA linking)
-PKG_CPPFLAGS=""
-PKG_LIBS="-ldl"
+# Detect architecture
+ARCH=$(uname -m)
+case "$ARCH" in
+  x86_64)  ARCH_TAG="x86_64" ;;
+  aarch64) ARCH_TAG="aarch64" ;;
+  arm64)   ARCH_TAG="aarch64" ;;
+  *)       echo "Unsupported architecture: $ARCH"; exit 1 ;;
+esac
 
-if [ -n "${PJRT_INCLUDE_DIR}" ]; then
-  PKG_CPPFLAGS="-I${PJRT_INCLUDE_DIR}"
+# Detect OS
+OS=$(uname -s)
+case "$OS" in
+  Linux)  OS_TAG="linux-gnu" ;;
+  Darwin) OS_TAG="darwin" ;;
+  *)      echo "Unsupported OS: $OS"; exit 1 ;;
+esac
+
+VARIANT="${XLA_VARIANT:-cpu}"
+XLA_TARBALL="xla_extension-${XLA_VERSION}-${ARCH_TAG}-${OS_TAG}-${VARIANT}.tar.gz"
+XLA_URL="${XLA_BASE_URL}/${XLA_TARBALL}"
+
+XLA_DIR="inst/xla"
+
+# Allow user to skip download if XLA_EXTENSION_DIR is set
+if [ -n "${XLA_EXTENSION_DIR}" ]; then
+  echo "Using XLA extension from: ${XLA_EXTENSION_DIR}"
+  XLA_DIR="${XLA_EXTENSION_DIR}"
+elif [ -f "${XLA_DIR}/lib/libxla_extension.so" ] || [ -f "${XLA_DIR}/lib/libxla_extension.dylib" ]; then
+  echo "XLA extension already present in ${XLA_DIR}"
+else
+  echo "Downloading XLA extension: ${XLA_TARBALL}"
+  mkdir -p "${XLA_DIR}"
+  curl -sL "${XLA_URL}" -o "/tmp/${XLA_TARBALL}"
+  if [ $? -ne 0 ]; then
+    echo "Failed to download ${XLA_URL}"
+    exit 1
+  fi
+  tar xzf "/tmp/${XLA_TARBALL}" -C "${XLA_DIR}" --strip-components=1
+  rm -f "/tmp/${XLA_TARBALL}"
+  echo "XLA extension installed to ${XLA_DIR}"
 fi
 
-# Generate src/Makevars from template
-sed \
-  -e "s|@PKG_CPPFLAGS@|${PKG_CPPFLAGS}|g" \
-  -e "s|@PKG_LIBS@|${PKG_LIBS}|g" \
-  src/Makevars.in > src/Makevars
+# Resolve to absolute path for Makevars
+PKG_DIR=$(pwd)
+XLA_ABS_DIR="${PKG_DIR}/${XLA_DIR}"
+
+# Determine library extension
+if [ "$OS" = "Darwin" ]; then
+  LIB_EXT="dylib"
+else
+  LIB_EXT="so"
+fi
+
+# Verify the library exists
+if [ ! -f "${XLA_ABS_DIR}/lib/libxla_extension.${LIB_EXT}" ]; then
+  echo "ERROR: libxla_extension.${LIB_EXT} not found in ${XLA_ABS_DIR}/lib/"
+  exit 1
+fi
+
+# Generate src/Makevars
+XLA_INCLUDE="${XLA_ABS_DIR}/include"
+XLA_LIB="${XLA_ABS_DIR}/lib"
+
+cat > src/Makevars <<EOF
+CXX_STD = CXX17
+PKG_CXXFLAGS = -I"${XLA_INCLUDE}" \$(shell Rscript -e "Rcpp:::CxxFlags()")
+PKG_LIBS = -L"${XLA_LIB}" -lxla_extension -Wl,-rpath,"${XLA_LIB}" \$(shell Rscript -e "Rcpp:::LdFlags()")
+EOF
 
 echo "rjax: configured successfully"
-if [ -n "${PJRT_PLUGIN_PATH}" ]; then
-  echo "  PJRT plugin: ${PJRT_PLUGIN_PATH}"
-else
-  echo "  PJRT plugin: will be found at runtime via PJRT_PLUGIN_PATH env var"
-fi
+echo "  XLA extension: ${XLA_ABS_DIR}"
+echo "  Library: ${XLA_LIB}/libxla_extension.${LIB_EXT}"

@@ -1,18 +1,22 @@
 Package: rjax
 Type: Package
-Title: R Interface to XLA via PJRT
+Title: R Interface to XLA
 Version: 0.0.0.9000
 Authors@R: person("Troy", "Hernandez", role = c("aut", "cre"),
     email = "troy@cornball.ai",
     comment = c(ORCID = "0009-0005-4248-604X"))
-Description: Direct access to XLA (Accelerated Linear Algebra) from R via the
-    PJRT C API. Compiles and executes HLO programs on CPU, GPU, and TPU
-    backends without requiring Python or JAX.
+Description: Direct access to XLA (Accelerated Linear Algebra) from R.
+    Compiles and executes HLO programs on CPU, GPU, and TPU backends
+    without requiring Python or JAX.
 License: MIT + file LICENSE
 URL: https://github.com/cornball-ai/rjax
 BugReports: https://github.com/cornball-ai/rjax/issues
-SystemRequirements: XLA PJRT plugin (libpjrt_c_api_cpu.so or similar)
+SystemRequirements: XLA extension library (downloaded automatically by configure)
 NeedsCompilation: yes
+Imports:
+    Rcpp
+LinkingTo:
+    Rcpp
 Suggests:
     tinytest
 Encoding: UTF-8

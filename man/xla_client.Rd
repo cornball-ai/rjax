@@ -3,13 +3,11 @@
 \alias{xla_client}
 \title{Create an XLA client}
 \usage{
-xla_client()
+xla_client(backend = "cpu")
 }
 \value{
 An external pointer of class \code{xla_client}.
 }
 \description{
-Creates a PJRT client for the loaded plugin backend.
-The PJRT plugin must be loaded first (either via PJRT_PLUGIN_PATH
-environment variable or by calling the plugin loader directly).
+Creates a CPU-backed XLA client for compiling and executing computations.
 }
