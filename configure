@@ -1,0 +1,27 @@
+#!/bin/sh
+# configure script for rjax
+# Detects or downloads PJRT plugin, generates src/Makevars
+
+PJRT_PLUGIN_PATH="${PJRT_PLUGIN_PATH}"
+PJRT_INCLUDE_DIR="${PJRT_INCLUDE_DIR}"
+
+# Default: just need dlopen (no compile-time XLA linking)
+PKG_CPPFLAGS=""
+PKG_LIBS="-ldl"
+
+if [ -n "${PJRT_INCLUDE_DIR}" ]; then
+  PKG_CPPFLAGS="-I${PJRT_INCLUDE_DIR}"
+fi
+
+# Generate src/Makevars from template
+sed \
+  -e "s|@PKG_CPPFLAGS@|${PKG_CPPFLAGS}|g" \
+  -e "s|@PKG_LIBS@|${PKG_LIBS}|g" \
+  src/Makevars.in > src/Makevars
+
+echo "rjax: configured successfully"
+if [ -n "${PJRT_PLUGIN_PATH}" ]; then
+  echo "  PJRT plugin: ${PJRT_PLUGIN_PATH}"
+else
+  echo "  PJRT plugin: will be found at runtime via PJRT_PLUGIN_PATH env var"
+fi

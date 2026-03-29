@@ -1,0 +1,14 @@
+# tinyrox says don't edit this manually, but it can't stop you!
+
+export(xla_buffer)
+export(xla_client)
+export(xla_compile)
+export(xla_devices)
+export(xla_execute)
+
+S3method(as.array,xla_buffer)
+S3method(print,xla_buffer)
+S3method(print,xla_client)
+S3method(print,xla_executable)
+
+useDynLib(rjax, .registration = TRUE)
