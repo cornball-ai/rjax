@@ -3,7 +3,7 @@
 \alias{xla_jit}
 \title{JIT-compile an R function for XLA execution}
 \usage{
-xla_jit(f, dtype = "f32")
+xla_jit(f, dtype = "f32", backend = "cpu")
 }
 \arguments{
 \item{f}{An R function using arithmetic ops (+, -, *, /, ^),

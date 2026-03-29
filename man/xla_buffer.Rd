@@ -3,7 +3,7 @@
 \alias{xla_buffer}
 \title{Transfer data to an XLA device buffer}
 \usage{
-xla_buffer(client, data, dims = length(data), dtype = "f32")
+xla_buffer(client, data, dims = NULL, dtype = "f32")
 }
 \arguments{
 \item{client}{An \code{xla_client} object.}

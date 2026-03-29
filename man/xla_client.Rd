@@ -3,7 +3,7 @@
 \alias{xla_client}
 \title{Create an XLA client}
 \usage{
-xla_client()
+xla_client(backend = "cpu")
 }
 \value{
 An external pointer of class \code{xla_client}.

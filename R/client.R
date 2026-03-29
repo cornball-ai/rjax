@@ -4,8 +4,9 @@
 #'
 #' @return An external pointer of class \code{xla_client}.
 #' @export
-xla_client <- function() {
-  ptr <- rjax_client_create()
+xla_client <- function(backend = "cpu") {
+  backend <- match.arg(backend, c("cpu", "gpu", "cuda"))
+  ptr <- rjax_client_create(backend)
   class(ptr) <- "xla_client"
   ptr
 }

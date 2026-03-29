@@ -9,8 +9,9 @@
 #'   Defaults to \code{"f32"}.
 #' @return An external pointer of class \code{xla_buffer}.
 #' @export
-xla_buffer <- function(client, data, dims = length(data), dtype = "f32") {
+xla_buffer <- function(client, data, dims = NULL, dtype = "f32") {
   if (!inherits(client, "xla_client")) stop("expected an xla_client object")
+  if (is.null(dims)) dims <- infer_dims(data)
   dims <- as.integer(dims)
   dtype <- match.arg(dtype, c("f32", "f64", "i32"))
   ptr <- rjax_buffer_from_r(client, as.numeric(data), dims, dtype)

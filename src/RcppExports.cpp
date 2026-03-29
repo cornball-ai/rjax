@@ -48,12 +48,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // rjax_client_create
-SEXP rjax_client_create();
-RcppExport SEXP _rjax_rjax_client_create() {
+SEXP rjax_client_create(std::string backend);
+RcppExport SEXP _rjax_rjax_client_create(SEXP backendSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rjax_client_create());
+    Rcpp::traits::input_parameter< std::string >::type backend(backendSEXP);
+    rcpp_result_gen = Rcpp::wrap(rjax_client_create(backend));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -490,7 +491,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rjax_rjax_buffer_from_r", (DL_FUNC) &_rjax_rjax_buffer_from_r, 4},
     {"_rjax_rjax_buffer_to_r", (DL_FUNC) &_rjax_rjax_buffer_to_r, 1},
     {"_rjax_rjax_buffer_shape", (DL_FUNC) &_rjax_rjax_buffer_shape, 1},
-    {"_rjax_rjax_client_create", (DL_FUNC) &_rjax_rjax_client_create, 0},
+    {"_rjax_rjax_client_create", (DL_FUNC) &_rjax_rjax_client_create, 1},
     {"_rjax_rjax_client_platform", (DL_FUNC) &_rjax_rjax_client_platform, 1},
     {"_rjax_rjax_client_devices", (DL_FUNC) &_rjax_rjax_client_devices, 1},
     {"_rjax_rjax_compile", (DL_FUNC) &_rjax_rjax_compile, 2},

@@ -45,3 +45,19 @@ expect_equal(gf(0.0, 3.0), 4.0, tolerance = 1e-5)  # 3 + cos(0) = 4
 # softplus: d/dx log(1+exp(x)) = sigmoid(x)
 gsoftplus <- xla_grad(function(x) log(1 + exp(x)))
 expect_equal(gsoftplus(0.0), 0.5, tolerance = 1e-5)
+
+# ---- Grad of grad (higher-order derivatives) ----
+
+# d2/dx2 x^3 = 6x
+g2_cube <- xla_grad(xla_grad(function(x) x^3))
+expect_equal(g2_cube(2.0), 12.0, tolerance = 1e-4)
+
+# d2/dx2 sin(x) = -sin(x)
+g2_sin <- xla_grad(xla_grad(sin))
+expect_equal(g2_sin(0.0), 0.0, tolerance = 1e-5)
+expect_equal(g2_sin(pi / 2), -1.0, tolerance = 1e-4)
+
+# d3/dx3 x^4 = 24x
+g3_x4 <- xla_grad(xla_grad(xla_grad(function(x) x^4)))
+expect_equal(g3_x4(1.0), 24.0, tolerance = 1e-3)
+

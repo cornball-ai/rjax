@@ -13,8 +13,8 @@ rjax_buffer_shape <- function(buffer_xptr) {
     .Call(`_rjax_rjax_buffer_shape`, buffer_xptr)
 }
 
-rjax_client_create <- function() {
-    .Call(`_rjax_rjax_client_create`)
+rjax_client_create <- function(backend) {
+    .Call(`_rjax_rjax_client_create`, backend)
 }
 
 rjax_client_platform <- function(client_xptr) {

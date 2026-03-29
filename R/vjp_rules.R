@@ -2,10 +2,19 @@
 #
 # Each rule takes: g (upstream gradient), inputs (list of forward inputs),
 # output (forward output). Returns: list of gradients for each input.
-# All values are xla_ops on the same builder.
+#
+# All operations use the overloaded operators (+, -, *, /) or the
+# traced_unary/traced_binary helpers so they record on the active tape.
+
+# Helpers for VJP rules: create ops that record on the current tape.
+traced_unary <- function(op_name, cpp_fn, x) {
+  b <- attr(x, "builder")
+  if (is.null(b)) b <- op_builder(x)
+  result <- tag_op(cpp_fn(x), b)
+  tape_record(op_name, result, list(x))
+}
 
 .vjp_rules <- list(
-  # Parameters are leaf nodes, no further backprop needed
   param = function(g, inputs, output) {
     list()
   },
@@ -33,13 +42,10 @@
   },
 
   abs = function(g, inputs, output) {
-    b <- attr(g, "builder")
-    s <- tag_op(rjax_sign(inputs[[1]]), b)
-    list(g * s)
+    list(g * traced_unary("sign", rjax_sign, inputs[[1]]))
   },
 
   exp = function(g, inputs, output) {
-    # reuse forward output: d/dx exp(x) = exp(x)
     list(g * output)
   },
 
@@ -48,54 +54,50 @@
   },
 
   sqrt = function(g, inputs, output) {
-    # d/dx sqrt(x) = 1/(2*sqrt(x)), reuse output
     list(g / (output + output))
   },
 
   tanh = function(g, inputs, output) {
-    # d/dx tanh(x) = 1 - tanh(x)^2, reuse output
     list(g * (1 - output * output))
   },
 
   sin = function(g, inputs, output) {
-    b <- attr(g, "builder")
-    list(g * tag_op(rjax_cos(inputs[[1]]), b))
+    list(g * traced_unary("cos", rjax_cos, inputs[[1]]))
   },
 
   cos = function(g, inputs, output) {
-    b <- attr(g, "builder")
-    list(-g * tag_op(rjax_sin(inputs[[1]]), b))
+    list(-g * traced_unary("sin", rjax_sin, inputs[[1]]))
   },
 
   pow = function(g, inputs, output) {
     a <- inputs[[1]]
-    b_val <- inputs[[2]]
-    # d/da a^b = b * a^(b-1)
-    # d/db a^b = log(a) * a^b
-    b_env <- attr(g, "builder")
+    b <- inputs[[2]]
     list(
-      g * b_val * (a ^ (b_val - 1)),
-      g * tag_op(rjax_log(a), b_env) * output
+      g * b * (a ^ (b - 1)),
+      g * traced_unary("log", rjax_log, a) * output
     )
   },
 
   dot = function(g, inputs, output) {
     a <- inputs[[1]]
-    b_val <- inputs[[2]]
+    b <- inputs[[2]]
     bld <- attr(g, "builder")
-    # For 1-D dot products: grad_a = g * b, grad_b = g * a
-    # For matrix multiply: grad_a = g @ b^T, grad_b = a^T @ g
     a_sh <- op_shape(a)
-    b_sh <- op_shape(b_val)
+    b_sh <- op_shape(b)
     if (length(a_sh$dims) <= 1 && length(b_sh$dims) <= 1) {
-      list(g * b_val, g * a)
+      list(g * b, g * a)
     } else {
-      b_t <- tag_op(rjax_transpose(b_val, as.integer(rev(seq_along(b_sh$dims) - 1L))), bld)
-      a_t <- tag_op(rjax_transpose(a, as.integer(rev(seq_along(a_sh$dims) - 1L))), bld)
-      list(
-        tag_op(rjax_dot(g, b_t), bld),
-        tag_op(rjax_dot(a_t, g), bld)
-      )
+      b_perm <- as.integer(rev(seq_along(b_sh$dims) - 1L))
+      a_perm <- as.integer(rev(seq_along(a_sh$dims) - 1L))
+      b_t <- tag_op(rjax_transpose(b, b_perm), bld)
+      b_t <- tape_record("transpose", b_t, list(b), extras = list(permutation = b_perm))
+      a_t <- tag_op(rjax_transpose(a, a_perm), bld)
+      a_t <- tape_record("transpose", a_t, list(a), extras = list(permutation = a_perm))
+      ga <- tag_op(rjax_dot(g, b_t), bld)
+      ga <- tape_record("dot", ga, list(g, b_t))
+      gb <- tag_op(rjax_dot(a_t, g), bld)
+      gb <- tape_record("dot", gb, list(a_t, g))
+      list(ga, gb)
     }
   },
 
@@ -114,10 +116,8 @@
   },
 
   reduce_sum = function(g, inputs, output) {
-    # Gradient of sum is broadcast of g back to input shape
     in_shape <- op_shape(inputs[[1]])
     bld <- attr(g, "builder")
-    # g is a scalar (or reduced tensor), broadcast back
     expanded <- tag_op(
       rjax_constant_broadcast(bld, 1.0, in_shape$dtype, as.integer(in_shape$dims)),
       bld

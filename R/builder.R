@@ -156,9 +156,7 @@ xla_tanh <- function(x) {
 #' @return An \code{xla_op}.
 #' @export
 xla_dot <- function(lhs, rhs) {
-  ptr <- rjax_dot(lhs, rhs)
-  class(ptr) <- "xla_op"
-  ptr
+  binary_op("dot", rjax_dot, lhs, rhs)
 }
 
 #' Transpose
@@ -167,9 +165,10 @@ xla_dot <- function(lhs, rhs) {
 #' @return An \code{xla_op}.
 #' @export
 xla_transpose <- function(x, permutation) {
-  ptr <- rjax_transpose(x, as.integer(permutation))
-  class(ptr) <- "xla_op"
-  ptr
+  permutation <- as.integer(permutation)
+  b <- attr(x, "builder")
+  result <- tag_op(rjax_transpose(x, permutation), b)
+  tape_record("transpose", result, list(x), extras = list(permutation = permutation))
 }
 
 #' Reshape
@@ -178,9 +177,10 @@ xla_transpose <- function(x, permutation) {
 #' @return An \code{xla_op}.
 #' @export
 xla_reshape <- function(x, new_dims) {
-  ptr <- rjax_reshape(x, as.integer(new_dims))
-  class(ptr) <- "xla_op"
-  ptr
+  new_dims <- as.integer(new_dims)
+  b <- attr(x, "builder")
+  result <- tag_op(rjax_reshape(x, new_dims), b)
+  tape_record("reshape", result, list(x))
 }
 
 # ---- Build ----

@@ -22,7 +22,7 @@ case "$OS" in
   *)      echo "Unsupported OS: $OS"; exit 1 ;;
 esac
 
-VARIANT="cpu"
+VARIANT="${XLA_VARIANT:-cpu}"
 XLA_TARBALL="xla_extension-${XLA_VERSION}-${ARCH_TAG}-${OS_TAG}-${VARIANT}.tar.gz"
 XLA_URL="${XLA_BASE_URL}/${XLA_TARBALL}"
 
