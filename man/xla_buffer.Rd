@@ -10,15 +10,14 @@ xla_buffer(client, data, dims = length(data), dtype = "f32")
 
 \item{data}{A numeric or integer vector.}
 
-\item{dims}{Integer vector of dimensions. Defaults to \code{length(data)}
-(a 1-D tensor).}
+\item{dims}{Integer vector of dimensions. Defaults to \code{length(data)}.}
 
-\item{dtype}{Character scalar: \code{"f32"}, \code{"f64"}, \code{"i32"}.
+\item{dtype}{Character: \code{"f32"}, \code{"f64"}, \code{"i32"}.
 Defaults to \code{"f32"}.}
 }
 \value{
 An external pointer of class \code{xla_buffer}.
 }
 \description{
-Copies an R numeric vector to device memory managed by the PJRT client.
+Copies an R numeric vector to device memory.
 }

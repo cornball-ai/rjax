@@ -1,13 +1,13 @@
 #' Create an XLA client
 #'
-#' Creates a PJRT client for the loaded plugin backend.
-#' The PJRT plugin must be loaded first (either via PJRT_PLUGIN_PATH
-#' environment variable or by calling the plugin loader directly).
+#' Creates a CPU-backed XLA client for compiling and executing computations.
 #'
 #' @return An external pointer of class \code{xla_client}.
 #' @export
 xla_client <- function() {
-  .Call(rjax_client_create)
+  ptr <- rjax_client_create()
+  class(ptr) <- "xla_client"
+  ptr
 }
 
 #' List devices on a client
@@ -16,14 +16,14 @@ xla_client <- function() {
 #' @return Character vector of device descriptions.
 #' @export
 xla_devices <- function(client) {
-  if (!inherits(client, "xla_client")) {
-    stop("expected an xla_client object")
-  }
-  .Call(rjax_client_devices, client)
+  if (!inherits(client, "xla_client")) stop("expected an xla_client object")
+  rjax_client_devices(client)
 }
 
 #' @export
 print.xla_client <- function(x, ...) {
-  cat("<xla_client>\n")
+  platform <- rjax_client_platform(x)
+  devices <- rjax_client_devices(x)
+  cat("<xla_client:", platform, "with", length(devices), "device(s)>\n")
   invisible(x)
 }
