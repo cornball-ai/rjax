@@ -4,6 +4,8 @@ R interface to XLA. Write normal R math, compile it to optimized machine code, r
 
 No Python. No JAX. Just R and the XLA compiler.
 
+> **Note:** This is an experimental project. If you want a more mature R+XLA stack with active development and broader feature coverage, check out [anvil](https://github.com/r-xla/anvil) from the r-xla org.
+
 ## Quick start
 
 ```r
